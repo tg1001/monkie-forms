@@ -1,0 +1,16 @@
+{
+  "name": "privacy-form-contract",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "midnight-compact build",
+    "test": "midnight-compact test"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.15.0",
+    "@midnight-ntwrk/compact-structures": "^0.15.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}

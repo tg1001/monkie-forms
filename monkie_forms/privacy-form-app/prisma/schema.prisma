@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  role          UserRole      @default(APPLICANT)
+  publicKey     String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  applications  Application[]
+}
+
+enum UserRole {
+  APPLICANT
+  ORGANIZER
+  ADMIN
+}
+
+model Application {
+  id                    Int       @id @default(autoincrement())
+  applicationId         Int       @unique
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id])
+  
+  firstName             String
+  lastName              String
+  email                 String
+  gender                Gender
+  citizenship           String
+  birthMonthYear        String
+  
+  cvHash                String
+  writtenSubmissionHash String
+  videoLinkHash         String
+  
+  commitment            String
+  
+  status                ApplicationStatus @default(SUBMITTED)
+  
+  submittedAt           DateTime  @default(now())
+  reviewedAt            DateTime?
+  acceptedAt            DateTime?
+  
+  revealedFields        RevealedField[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([applicationId])
+}
+
+enum Gender {
+  FEMALE
+  MALE
+  UNSPECIFIED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
+}
+
+model RevealedField {
+  id              Int       @id @default(autoincrement())
+  applicationId   Int
+  application     Application @relation(fields: [applicationId], references: [id])
+  fieldType       PrivateFieldType
+  revealedAt      DateTime  @default(now())
+  
+  @@index([applicationId])
+}
+
+enum PrivateFieldType {
+  PASSPORT_NUMBER
+  EXACT_DATE_OF_BIRTH
+  WRITTEN_ESSAY
+}
