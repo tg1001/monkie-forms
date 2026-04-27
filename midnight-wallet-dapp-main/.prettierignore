@@ -1,0 +1,7 @@
+dist/
+node_modules/
+src/contractcompiled
+*.json
+yarn.lock
+.github
+*.md
